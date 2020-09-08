@@ -1,11 +1,13 @@
 provider "github" {
-    token = data.template_file.token.template
-    organization = "tf-exmp"
+    token = file("/home/lyubo/Desktop/tf_test_repo/task2/.gh_token")
+    organization = var.github_org_settings.org_name
 }
 
-data "template_file" "token" {
-    template = file("/home/lyubo/Desktop/tf_test_repo/task2/.gh_token")
-}
 resource "github_repository" "test_repo" {
-    name = "example_repo"
+    name = var.github_org_settings.repo_name
+}
+
+resource "github_membership" "team_memebrship" {
+    count = length(var.github_org_settings.usernames)
+    username = var.github_org_settings.usernames[count.index]
 }
