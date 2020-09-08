@@ -1,0 +1,4 @@
+.gh_token
+terraform.tfstate
+terraform.tfstate.backup
+.terraform
