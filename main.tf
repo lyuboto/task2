@@ -7,7 +7,7 @@ resource "github_repository" "test_repo" {
     name = var.github_org_settings.repo_name
 }
 
-resource "github_membership" "team_memebrship" {
-    count = length(var.github_org_settings.usernames)
-    username = var.github_org_settings.usernames[count.index]
+resource "github_team" "teams_in_org" {
+    count = length(var.github_org_settings.team_names)
+    name = var.github_org_settings.team_names[count.index]
 }
