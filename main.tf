@@ -3,21 +3,39 @@ provider "github" {
   organization = var.github_org_settings.org_name
 }
 
-resource "github_repository" "all_repos" {
-  count = length(var.github_org_settings.repo_names)
+resource "github_repository" "this" {
+  for_each = setunion(
+    var.github_org_settings.security_repos,
+    var.github_org_settings.AI_repos,
+    var.github_org_settings.analytics_repos
+  )
 
-  name  = var.github_org_settings.repo_names[count.index]
+  name = each.value
 }
 
-resource "github_team" "teams_in_org" {
-  count = length(var.github_org_settings.team_names)
-
-  name  = var.github_org_settings.team_names[count.index]
-}
-
-resource "github_team_repository" "team_repos" {
-  count      = length(var.github_org_settings.repo_names)
+resource "github_team" "this" {
+  for_each = var.github_org_settings.team_names
   
-  team_id    = github_team.teams_in_org[count.index].id
-  repository = github_repository.all_repos[count.index].name
+  name = each.value
+}
+
+resource "github_team_repository" "security_repos" {
+  for_each = var.github_org_settings.security_repos
+
+  team_id    = github_team.this["Security"].id
+  repository = each.value
+}
+
+resource "github_team_repository" "AI_repos" {
+  for_each = var.github_org_settings.AI_repos
+
+  team_id    = github_team.this["AI"].id
+  repository = each.value
+}
+
+resource "github_team_repository" "analytics_repos" {
+  for_each = var.github_org_settings.analytics_repos
+
+  team_id    = github_team.this["Analytics"].id
+  repository = each.value
 }

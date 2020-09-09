@@ -4,5 +4,5 @@ output "Letter" {
 }
 
 output "Clone_URLs" {
-  value = github_repository.all_repos.*.http_clone_url
+  value = [for url in github_repository.this : url.http_clone_url]
 }
