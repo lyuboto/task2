@@ -5,16 +5,19 @@ provider "github" {
 
 resource "github_repository" "all_repos" {
   count = length(var.github_org_settings.repo_names)
+
   name  = var.github_org_settings.repo_names[count.index]
 }
 
 resource "github_team" "teams_in_org" {
   count = length(var.github_org_settings.team_names)
+
   name  = var.github_org_settings.team_names[count.index]
 }
 
 resource "github_team_repository" "team_repos" {
   count      = length(var.github_org_settings.repo_names)
+  
   team_id    = github_team.teams_in_org[count.index].id
   repository = github_repository.all_repos[count.index].name
 }
