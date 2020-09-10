@@ -5,9 +5,9 @@ provider "github" {
 
 resource "github_repository" "this" {
   for_each = setunion(
-    var.github_org_settings.security_repos,
-    var.github_org_settings.AI_repos,
-    var.github_org_settings.analytics_repos
+    var.github_org_settings.repos.security_repos,
+    var.github_org_settings.repos.ai_repos,
+    var.github_org_settings.repos.analytics_repos
   )
 
   name = each.value
@@ -20,21 +20,21 @@ resource "github_team" "this" {
 }
 
 resource "github_team_repository" "security_repos" {
-  for_each = var.github_org_settings.security_repos
+  for_each = var.github_org_settings.repos.security_repos
 
   team_id    = github_team.this["Security"].id
   repository = each.value
 }
 
 resource "github_team_repository" "AI_repos" {
-  for_each = var.github_org_settings.AI_repos
+  for_each = var.github_org_settings.repos.ai_repos
 
   team_id    = github_team.this["AI"].id
   repository = each.value
 }
 
 resource "github_team_repository" "analytics_repos" {
-  for_each = var.github_org_settings.analytics_repos
+  for_each = var.github_org_settings.repos.analytics_repos
 
   team_id    = github_team.this["Analytics"].id
   repository = each.value
