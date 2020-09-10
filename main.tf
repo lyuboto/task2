@@ -15,7 +15,7 @@ resource "github_repository" "this" {
 
 resource "github_team" "this" {
   for_each = var.github_org_settings.team_names
-  
+
   name = each.value
 }
 
